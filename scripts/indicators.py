@@ -35,14 +35,15 @@ def rolling_mean_numba(arr, window):
 
 @njit(cache=True)
 def rolling_std_numba(arr, window):
-    """Numba滚动标准差"""
+    """Numba滚动标准差（样本标准差，ddof=1）"""
     n = len(arr)
     result = np.empty(n)
     for i in range(n):
         if i < window - 1:
             result[i] = np.nan
         else:
-            result[i] = np.std(arr[i-window+1:i+1])
+            window_data = arr[i-window+1:i+1]
+            result[i] = np.std(window_data, ddof=1)
     return result
 
 @njit(cache=True)
@@ -266,11 +267,12 @@ class VolatilityIndicators:
     """波动率指标家族"""
     
     @staticmethod
-    @njit(cache=True)
     def bollinger_bands(close: np.ndarray, window: int = 20, num_std: float = 2.0) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """布林带 Bollinger Bands"""
-        middle = rolling_mean_numba(close, window)
-        std = rolling_std_numba(close, window)
+        """布林带 Bollinger Bands - 使用Pandas确保正确性"""
+        import pandas as pd
+        s = pd.Series(close)
+        middle = s.rolling(window=window).mean().values
+        std = s.rolling(window=window).std().values
         upper = middle + num_std * std
         lower = middle - num_std * std
         return upper, middle, lower
