@@ -1,0 +1,27 @@
+# 核心依赖
+numpy>=1.24.0
+pandas>=2.0.0
+numba>=0.58.0
+pyarrow>=14.0.0
+
+# GPU加速（可选）
+# cupy-cuda12x  # 根据CUDA版本选择
+
+# 数据存储
+fastparquet>=2023.0.0
+
+# 优化和参数搜索
+scikit-optimize>=0.9.0
+
+# 可视化
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# 测试
+pytest>=7.0.0
+pytest-benchmark>=4.0.0
+
+# 开发工具
+jupyter>=1.0.0
+line_profiler>=4.0.0
+memory_profiler>=0.60.0
